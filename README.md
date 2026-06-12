@@ -1,16 +1,45 @@
-# React + Vite
+# DocManager — Document Management System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React + Vite web application for uploading, searching, previewing, and downloading documents. Users log in via OTP, upload files with metadata (date, category, tags), and search/filter documents with options to preview or download individually or as a ZIP.
 
-Currently, two official plugins are available:
+## Run the Application
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```bash
+npm install
+npm run dev
+```
 
-## React Compiler
+The app runs at `http://localhost:5173`.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Build for Production
 
-## Expanding the ESLint configuration
+```bash
+npm run build
+npm run preview
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Linting
+
+```bash
+npm run lint
+```
+
+## Testing
+
+No test framework is currently configured. To add tests, install Vitest:
+
+```bash
+npm install -D vitest @testing-library/react @testing-library/jest-dom jsdom
+```
+
+Then add to `package.json` scripts:
+
+```json
+"test": "vitest"
+```
+
+Run tests with:
+
+```bash
+npm run test
+```
