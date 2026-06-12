@@ -148,20 +148,14 @@ function SearchPage() {
 
   const fetchBlob = async (url) => {
     try {
-      return await new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open("GET", url, true);
-        xhr.responseType = "blob";
-        xhr.onload = () => {
-          if (xhr.status === 200) {
-            resolve(xhr.response);
-          } else {
-            reject(new Error(`HTTP ${xhr.status}`));
-          }
-        };
-        xhr.onerror = () => reject(new Error("Network error"));
-        xhr.send();
-      });
+      // In dev, route through the Vite CORS proxy to bypass cross-origin restrictions.
+      // In production, fetch directly (server must allow CORS or be same-origin).
+      const fetchUrl = import.meta.env.DEV
+        ? `/cors-proxy?url=${encodeURIComponent(url)}`
+        : url;
+      const res = await fetch(fetchUrl);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return await res.blob();
     } catch {
       return null;
     }
