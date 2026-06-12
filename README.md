@@ -11,6 +11,8 @@ npm run dev
 
 The app runs at `http://localhost:5173`.
 
+> A local CORS proxy is included in the Vite dev server to handle cross-origin file downloads (ZIP export). No extra setup needed.
+
 ## Build for Production
 
 ```bash
