@@ -9,17 +9,14 @@ import {
   useLocation,
 } from "react-router-dom";
 
-import OTPLogin from "./components/Login/OTPLogin";
+import OTPLogin   from "./components/Login/OTPLogin";
 import UploadForm from "./components/Upload/UploadForm";
 import SearchPage from "./components/Search/SearchPage";
-import AdminPage from "./components/Admin/AdminPage";
-
+import AdminPage  from "./components/Admin/AdminPage";
 
 function ProtectedRoute({ children }) {
   const token = localStorage.getItem("token");
-  if (!token) {
-    return <Navigate to="/" replace />;
-  }
+  if (!token) return <Navigate to="/" replace />;
   return children;
 }
 
@@ -27,16 +24,14 @@ function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Don't render the navbar on the login page
   if (location.pathname === "/") return null;
 
-  // Clear session and return to login
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("user_id");
     navigate("/");
   };
 
-  // Helper to highlight the active link
   const linkClass = (path) =>
     `px-3 py-2 rounded-md text-sm font-medium transition-colors ${
       location.pathname === path
@@ -45,21 +40,14 @@ function Navbar() {
     }`;
 
   return (
-    <nav className="bg-blue-900 shadow-md">
+    // sticky top-0 z-40 keeps navbar fixed at top while page scrolls
+    <nav className="sticky top-0 z-40 bg-blue-900 shadow-md">
       <div className="max-w-6xl mx-auto px-4 flex items-center justify-between h-14">
-        <span className="text-white font-bold text-lg tracking-wide">
-          📁 DocManager
-        </span>
+        <span className="text-white font-bold text-lg">📁 DocManager</span>
         <div className="flex items-center gap-2">
-          <Link to="/upload" className={linkClass("/upload")}>
-            Upload
-          </Link>
-          <Link to="/search" className={linkClass("/search")}>
-            Search
-          </Link>
-          <Link to="/admin" className={linkClass("/admin")}>
-            Admin
-          </Link>
+          <Link to="/upload" className={linkClass("/upload")}>Upload</Link>
+          <Link to="/search" className={linkClass("/search")}>Search</Link>
+          <Link to="/admin"  className={linkClass("/admin")}>Admin</Link>
           <button
             onClick={handleLogout}
             className="ml-2 px-3 py-2 rounded-md text-sm font-medium bg-red-500 text-white hover:bg-red-600 transition-colors"
@@ -72,7 +60,6 @@ function Navbar() {
   );
 }
 
-
 function App() {
   return (
     <BrowserRouter>
@@ -80,31 +67,9 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<OTPLogin />} />
-          <Route
-            path="/upload"
-            element={
-              <ProtectedRoute>
-                <UploadForm />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/search"
-            element={
-              <ProtectedRoute>
-                <SearchPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin"
-            element={
-              <ProtectedRoute>
-                <AdminPage />
-              </ProtectedRoute>
-            }
-          />
-
+          <Route path="/upload" element={<ProtectedRoute><UploadForm /></ProtectedRoute>} />
+          <Route path="/search" element={<ProtectedRoute><SearchPage /></ProtectedRoute>} />
+          <Route path="/admin"  element={<ProtectedRoute><AdminPage /></ProtectedRoute>} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>

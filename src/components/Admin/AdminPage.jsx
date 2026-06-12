@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 
 function AdminPage() {
+  // Form field values
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("User");
+  const [role,     setRole]     = useState("User");
 
+  // UI state
+  const [error,   setError]   = useState("");
   const [success, setSuccess] = useState("");
-  const [error, setError] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -14,13 +16,13 @@ function AdminPage() {
     setSuccess("");
 
     // Basic validation
-    if (!username.trim() || !password.trim()) {
-      setError("Username and password are required.");
-      return;
-    }
+    if (!username.trim()) return setError("Username is required.");
+    if (!password.trim()) return setError("Password is required.");
+    if (password.length < 6) return setError("Password must be at least 6 characters.");
 
-    // Mock "creation" success
-    setSuccess(`✅ User "${username}" created as ${role} (mock).`);
+    setSuccess(`✅ User "${username}" created with role "${role}".`);
+
+    // Reset form
     setUsername("");
     setPassword("");
     setRole("User");
@@ -29,14 +31,18 @@ function AdminPage() {
   return (
     <div className="max-w-md mx-auto px-4 py-8">
       <div className="bg-white rounded-2xl shadow-md p-6 sm:p-8">
-        <h2 className="text-xl font-bold text-blue-900 mb-6">Admin — Create User</h2>
 
-        {/* Banners */}
+        <h2 className="text-xl font-bold text-blue-900 mb-2">Admin Panel</h2>
+        <p className="text-sm text-gray-500 mb-6">Create a new user account</p>
+
+        {/* Error banner */}
         {error && (
           <div className="mb-4 rounded-md bg-red-50 border border-red-200 text-red-700 text-sm px-3 py-2">
             {error}
           </div>
         )}
+
+        {/* Success banner */}
         {success && (
           <div className="mb-4 rounded-md bg-green-50 border border-green-200 text-green-700 text-sm px-3 py-2">
             {success}
@@ -44,6 +50,7 @@ function AdminPage() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
+
           {/* Username */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -67,7 +74,7 @@ function AdminPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter password"
+              placeholder="Min. 6 characters"
               className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
@@ -94,6 +101,7 @@ function AdminPage() {
           >
             Create User
           </button>
+
         </form>
       </div>
     </div>

@@ -1,49 +1,37 @@
-// src/services/api.js
-
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://apis.allsoft.co/api/documentManagement/",
-  headers: {
-    "Content-Type": "application/json",
-  },
+  baseURL: "https://apis.allsoft.co/api/documentManagement",
+  headers: { "Content-Type": "application/json" },
+});
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers["token"] = token;
+  }
+  return config;
 });
 
 
-const authHeader = () => ({
-  token: localStorage.getItem("token") || "",
-});
+// POST /generateOTP  
+export const generateOTP = (mobile_number) =>
+  api.post("/generateOTP", { mobile_number });
 
+// POST /validateOTP  
 
-export const generateOTP = (mobile_number) => {
-  return api.post("/generateOTP", { mobile_number });
-};
+export const validateOTP = (mobile_number, otp) =>
+  api.post("/validateOTP", { mobile_number, otp });
 
-
-export const validateOTP = (mobile_number, otp) => {
-  return api.post("/validateOTP", { mobile_number, otp });
-};
-
-
-export const uploadDocument = (formData) => {
-  return api.post("/saveDocumentEntry", formData, {
-    headers: {
-      ...authHeader(),
-      "Content-Type": "multipart/form-data",
-    },
+// POST /saveDocumentEntry 
+export const uploadDocument = (formData) =>
+  api.post("/saveDocumentEntry", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
   });
-};
 
+// POST /searchDocumentEntry 
+export const searchDocuments = (filters) =>
+  api.post("/searchDocumentEntry", filters);
 
-export const searchDocuments = (filters) => {
-  return api.post("/searchDocumentEntry", filters, {
-    headers: authHeader(),
-  });
-};
-
-
-export const fetchTags = (term = "") => {
-  return api.post("/documentTags", { term }, { headers: authHeader() });
-};
-
-export default api;
+// POST /documentTags  
+export const fetchTags = (term = "") =>
+  api.post("/documentTags", { term });
